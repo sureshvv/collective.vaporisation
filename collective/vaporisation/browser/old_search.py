@@ -16,7 +16,7 @@ class CloudSearch(BrowserView):
             base_query['path'] = path
         tags = self.request.get('tags', None)
         if not tags:
-            self.request.set('sort_on', 'modified')
+            self.request.set('sort_on', 'effective')
             self.request.set('sort_order', 'reverse')
             return self.context.queryCatalog(self.request, use_types_blacklist=use_types_blacklist, use_navigation_root=use_navigation_root)
         for tag in tags:
@@ -40,5 +40,5 @@ class CloudSearch(BrowserView):
             if result.UID not in uids:
                 unique_results.append(result)
                 uids.append(result.UID)
-        unique_results.sort(key=lambda x: x.modified, reverse=True)
+        unique_results.sort(key=lambda x: x.effective, reverse=True)
         return unique_results

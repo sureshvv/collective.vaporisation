@@ -6,6 +6,20 @@
 
   	<include package="plone.app.contentmenu" />
 
+    <browser:resource
+        name="cloudsearch.js"
+        file="cloudsearch.js"
+        />
+
+  	<browser:page
+		for="Products.CMFPlone.interfaces.siteroot.IPloneSiteRoot"
+		name="updated_cloud_search"
+		class=".search.CloudSearch"
+		template="updated_search.pt"
+		permission="zope2.View"
+		zcml:condition="installed plone.app.search"
+		/>
+
   	<browser:page
 		for="Products.CMFPlone.interfaces.siteroot.IPloneSiteRoot"
 		name="cloud_search"
