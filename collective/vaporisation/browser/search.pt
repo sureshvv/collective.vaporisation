@@ -59,11 +59,11 @@ div#vaporisation-search-filter {
                 <h1 class="documentFirstHeading" i18n:translate="">
                     <span class="nobold">Search results</span>
                   <tal:tags tal:define="tags request/tags|nothing" tal:condition="tags">
-                    <span class="nobold">&nbsp;for&nbsp;</span>
+                    <span class="nobold">for</span>
                     <tal:tag tal:replace="python:tags[0]" />
                     <tal:block tal:condition="python:len(tags) > 1"
                                tal:repeat="item python:tags[1:]">
-                      <span class="nobold">&nbsp;plus&nbsp;</span>
+                      <span class="nobold">plus</span>
                       <tal:tag tal:replace="item" />
                     </tal:block>
                   </tal:tags>
@@ -86,7 +86,7 @@ div#vaporisation-search-filter {
                     <span i18n:translate="batch_x_items_matching_your_criteria" i18n:domain="plone">
                         <strong i18n:name="number" id="search-results-number"
                                 tal:content="batch/sequence_length|string:0">234</strong>
-                        items matching your search terms.
+                        notes matching your search terms.
                     </span>
 
                     <dl class="actionMenu deactivated"
@@ -105,63 +105,7 @@ div#vaporisation-search-filter {
 
                               <fieldset class="noborder">
 
-                                  <legend i18n:translate="label_item_type">Item type</legend>
-
-                                  <div class="field"
-                                       tal:define="portal_types portal/portal_types;
-                                                   types_list view/types_list;
-                                                   all_checked python:(len(types_list) == len(request.get('portal_type', []))) or first_call;
-                                                   toggle_select_state python:all_checked and 'true' or 'false';">
-
-                                      <div class="formHelp"></div>
-
-                                      <span class="optionsToggle">
-                                          <input type="checkbox"
-                                                 onchange="form.submit()"
-                                                 name="pt_toggle"
-                                                 value="#"
-                                                 id="pt_toggle"
-                                                 class="noborder"
-                                                 checked="checked"
-                                                 tal:attributes="checked python:all_checked and 'checked' or '';
-                                                                 onchange string:javascript:toggleSelect(this, 'portal_type:list', ${toggle_select_state});"/>
-
-                                          <label for="pt_toggle"
-                                                 i18n:translate="label_toggle"
-                                                 >Select All/None
-                                          </label>
-                                      </span>
-                                      <br />
-                                      <div style="float:left; margin-right: 2em;"
-                                           tal:define="typeLists python:context.createMultiColumnList(types_list, numCols=2, sort_on='self');"
-                                           tal:attributes="style python:isRTL and 'float: right;; margin-left: 2em;;' or 'float: left;; margin-right: 2em;;';"
-                                           tal:repeat="sublist typeLists">
-                                          <tal:items repeat="type sublist">
-                                              <input type="checkbox"
-                                                     onchange="form.submit()"
-                                                     name="portal_type:list"
-                                                     value="#"
-                                                     class="noborder"
-                                                     checked="checked"
-                                                     tal:attributes="value type;
-                                                                     id string:portal_type_${repeat/sublist/number}_${repeat/type/number};
-                                                                     checked python:((type in request.get('portal_type', [])) or first_call) and 'checked' or ''
-                                                                     "/>
-                                              <label for=""
-                                                     i18n:translate=""
-                                                     tal:attributes="for string:portal_type_${repeat/sublist/number}_${repeat/type/number}"
-                                                     tal:content="python: portal_types.getTypeInfo(type).Title()"
-                                                     />
-                                              <br />
-                                          </tal:items>
-                                      </div>
-                                      <div class="visualClear"><!-- --></div>
-                                  </div>
-                              </fieldset>
-
-                              <fieldset class="noborder">
-
-                                  <legend i18n:translate="label_new_items_since">New items since</legend>
+                                  <legend i18n:translate="label_new_items_since">New notes since</legend>
 
                                   <div class="field">
 
@@ -171,18 +115,20 @@ div#vaporisation-search-filter {
                                                             yesterday python:(today-1).Date();
                                                             lastweek python:(today-7).Date();
                                                             lastmonth python:(today-31).Date();
+                                                            lastyear python:(today-365).Date();
                                                             ever string:1970-01-02;
-                                                            checked python:request.get('created', []);
+                                                            checked python:request.get('effective', []);
                                                             checked python:checked and checked['query'][0].Date() or ever;
                                                             is_yest python:checked==yesterday;
                                                             is_lastw python:checked==lastweek;
                                                             is_lastm python:checked==lastmonth;
-                                                            checked python:(is_yest or is_lastw or is_lastm) and checked or ever;
+                                                            is_lasty python:checked==lastyear;
+                                                            checked python:(is_yest or is_lastw or is_lastm or is_lasty) and checked or ever;
                                                            ">
                                           <input type="radio"
                                                  onchange="form.submit()"
                                                  id="query-date-yesterday"
-                                                 name="created.query:record:list:date"
+                                                 name="effective.query:record:list:date"
                                                  tal:attributes="value yesterday;
                                                                  checked python:checked==yesterday and 'checked' or '';"
                                                  />
@@ -191,7 +137,7 @@ div#vaporisation-search-filter {
                                           <input type="radio"
                                                  onchange="form.submit()"
                                                  id="query-date-lastweek"
-                                                 name="created.query:record:list:date"
+                                                 name="effective.query:record:list:date"
                                                  tal:attributes="value lastweek;
                                                                  checked python:checked==lastweek and 'checked' or '';"
                                                  />
@@ -200,7 +146,7 @@ div#vaporisation-search-filter {
                                           <input type="radio"
                                                  onchange="form.submit()"
                                                  id="query-date-lastmonth"
-                                                 name="created.query:record:list:date"
+                                                 name="effective.query:record:list:date"
                                                  tal:attributes="value lastmonth;
                                                                  checked python:checked==lastmonth and 'checked' or '';"
                                                  />
@@ -208,15 +154,24 @@ div#vaporisation-search-filter {
                                           <br />
                                           <input type="radio"
                                                  onchange="form.submit()"
+                                                 id="query-date-lastyear"
+                                                 name="effective.query:record:list:date"
+                                                 tal:attributes="value lastyear;
+                                                                 checked python:checked==lastyear and 'checked' or '';"
+                                                 />
+                                          <label for="query-date-lastyear" i18n:translate="time_last_year">Last year</label>
+                                          <br />
+                                          <input type="radio"
+                                                 onchange="form.submit()"
                                                  id="query-date-ever"
-                                                 name="created.query:record:list:date"
+                                                 name="effective.query:record:list:date"
                                                  tal:attributes="value ever;
                                                                  checked python:checked==ever and 'checked' or '';"
                                                  />
                                           <label for="query-date-ever" i18n:translate="time_ever">Ever</label>
                                       </tal:datetime>
 
-                                      <input type="hidden" name="created.range:record" value="min" />
+                                      <input type="hidden" name="effective.range:record" value="min" />
                                   </div>
 
                                   <div class="visualClear"><!-- --></div>
