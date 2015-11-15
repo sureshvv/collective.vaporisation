@@ -57,7 +57,7 @@ div#vaporisation-search-filter {
 
             <div class="cell width-16 position-0">
                 <h1 class="documentFirstHeading" i18n:translate="">
-                    <span class="nobold">Search results</span>
+                    <span class="nobold">search results</span>
                   <tal:tags tal:define="tags request/tags|nothing" tal:condition="tags">
                     <span class="nobold">for</span>
                     <tal:tag tal:replace="python:tags[0]" />

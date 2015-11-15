@@ -11,7 +11,7 @@
        href=""
        tal:content="view/Title"
        tal:define="start_path view/getStartPath"
-       tal:attributes="href string:${view/purl}/cloud_search?path=${view/getStartPath}">
+       tal:attributes="href string:${view/purl}/alltags">
       Cloud name
     </a>
     <span class="portletTopRight"></span>
@@ -71,7 +71,7 @@
 	      </tal:browsing>
 	    </tal:joint>
 	</tal:if>
-    <span class="portletBottomRight"></span>
+    <span class="portletBottomRight"><p>&nbsp;</p><a href="/alltags">more...</a></span>
   </dd>
 
 </dl>
